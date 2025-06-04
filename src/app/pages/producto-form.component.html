@@ -1,0 +1,63 @@
+<h1>Formulario de Registro</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div class="row">
+    <div>
+      <label>ID:</label>
+      <input formControlName="id" />
+      @if (form.get('id')?.invalid && form.get('id')?.touched) {
+        <div class="error">ID no válido</div>
+      }
+    </div>
+    <div>
+      <label>Nombre:</label>
+      <input formControlName="name" />
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        <div class="error">Nombre inválido</div>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Descripción:</label>
+      <textarea formControlName="description"></textarea>
+      @if (form.get('description')?.invalid && form.get('description')?.touched) {
+        <div class="error">Este campo es requerido</div>
+      }
+    </div>
+    <div>
+      <label>Logo (URL):</label>
+      <input formControlName="logo" />
+      @if (form.get('logo')?.invalid && form.get('logo')?.touched) {
+        <div class="error">Este campo es requerido</div>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Fecha Liberación:</label>
+      <input type="date" formControlName="date_release" />
+    </div>
+    <div>
+      <label>Fecha Revisión:</label>
+      <input type="date" formControlName="date_revision" />
+      @if (form.get('date_revision')?.invalid && form.get('date_revision')?.touched) {
+        <div class="error"> La Fecha debe ser exactamente un año posterior a la fecha de liberación
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (error) {
+    <div class="error">{{ error }}</div>
+  }
+
+  <div class="row" style="justify-content: center; gap: 2rem;">
+    <button type="button" (click)="resetForm()">Reiniciar</button>
+    <button type="submit" [disabled]="form.invalid">Enviar</button>
+  </div>
+
+</form>

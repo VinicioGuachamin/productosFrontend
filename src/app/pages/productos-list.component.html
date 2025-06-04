@@ -1,0 +1,79 @@
+<section class="productos-wrapper">
+  <h2><img
+    src="https://w7.pngwing.com/pngs/98/991/png-transparent-computer-icons-bank-icon-design-screenshot-bank-blue-angle-logo-thumbnail.png"
+    alt="icon"/> BANCO</h2>
+
+  <div class="header-bar">
+    <input type="text" [(ngModel)]="busqueda" placeholder="Buscar..."/>
+    <button (click)="irACrear()">Agregar</button>
+  </div>
+  <div class="tabla-scroll">
+    <table>
+      <thead>
+      <tr>
+        <th>Logo</th>
+        <th>Nombre del producto</th>
+        <th>Descripción</th>
+        <th>Fecha de liberación</th>
+        <th>Fecha de revisión</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (producto of productosFiltrados(); track producto.id) {
+          <tr>
+            <td data-label="Logo">
+              @if (!producto.logo) {
+                <img [src]="producto.logo" alt="logo" class="logo"/>
+              } @else {
+                <div class="logo-placeholder">{{ obtenerIniciales(producto.name) }}</div>
+              }
+            </td>
+            <td data-label="Nombre del producto">{{ producto.name }}</td>
+            <td data-label="Descripción">{{ producto.description }}</td>
+            <td data-label="Fecha de liberación">{{ producto.date_release }}</td>
+            <td data-label="Fecha de revisión">{{ producto.date_revision }}</td>
+            <td class="menu-cell" data-label="Opciones">
+              <div class="dropdown">
+                <button class="menu-btn" (click)="toggleMenu(producto.id, $event)">⋮</button>
+                @if (menuAbierto === producto.id) {
+                  <ul class="dropdown-menu">
+                    <li (click)="editar(producto.id); $event.stopPropagation()">Editar</li>
+                    <li (click)="abrirModal(producto); $event.stopPropagation()">Eliminar</li>
+                  </ul>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-bar">
+    <span>{{ productosFiltrados().length }} Resultados</span>
+    <select [(ngModel)]="cantidad">
+      <option [value]="5">5</option>
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+    </select>
+  </div>
+</section>
+
+
+@if (loading) {
+  <div>Cargando productos...</div>
+} @else {
+  @if (error) {
+    <div>{{ error }}</div>
+  }
+}
+
+<app-confirm-modal
+  *ngIf="productoAEliminar"
+  [mensaje]="'¿Estas seguro de eliminar el producto ' + productoAEliminar.name + '?'"
+  textoCancelar="Cancelar"
+  textoConfirmar="Confirmar"
+  (confirmar)="confirmarEliminar()"
+  (cancelar)="cerrarModal()"
+/>
+
